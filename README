@@ -1,0 +1,10 @@
+A html5 game
+
+run marbles.html in broswer and play it.
+have funs!
+
+currently, it has some bugs but you still can play it.
+
+next step:
+1.refactor code and improve the gui.
+2.change it as a online game and will use node.js to build the back end.

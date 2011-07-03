@@ -16,12 +16,16 @@ $(window).ready(function() {
     initGameEnv();
     initEventHandlers();
     initSpirites();
-    gameLoopHandler = setInterval(gameLoop, LOOPINTERVAL);
+    initPosition();
 });
 
 function initEventHandlers() {
     $(document).keydown(onKeyDown);
     $(document).keyup(onKeyUp);
+    $('#btnRestart').click(function(e){
+        initPosition();
+        start();
+    });
 }
 
 function initGameEnv() {
@@ -32,17 +36,20 @@ function initGameEnv() {
 
 function initSpirites() {
     marble = new Marble(10, "#FFFF00");
+    leftBoard = new Board(BOARD_WIDTH, BOARD_HEIGHT, "#00FF00");
+    rightBoard = new Board(BOARD_WIDTH, BOARD_HEIGHT, '#00FF00');
+}
+
+function initPosition(){
     marble.move(BOARD_WIDTH + RADIUS, (screenHeight - RADIUS)/2);
     marble.draw();
-    leftBoard = new Board(BOARD_WIDTH, BOARD_HEIGHT, "#00FF00");
     leftBoard.move(0, (screenHeight - BOARD_HEIGHT)/2);
     leftBoard.draw();
-    rightBoard = new Board(BOARD_WIDTH, BOARD_HEIGHT, '#00FF00');
     rightBoard.move(screenWidth - BOARD_WIDTH, (screenHeight - BOARD_HEIGHT)/2);
     rightBoard.draw();
 }
 
-function Spirite() {
+function Spirit() {
     this.x = 0;
     this.y = 0;
     this.color = "#000000";
@@ -53,7 +60,7 @@ function Marble(radius, color) {
     this.color = color;
 }
 
-Marble.prototype = new Spirite();
+Marble.prototype = new Spirit();
 Marble.prototype.move = function(x, y) {
     this.x = x;
     this.y = y;
@@ -73,7 +80,7 @@ function Board(width, height, color) {
     this.color = color;
 }
 
-Board.prototype = new Spirite();
+Board.prototype = new Spirit();
 Board.prototype.move = function(x, y) {
     this.x = x;
     this.y = y;
@@ -131,22 +138,22 @@ function moveBoard() {
 }
 
 function checkMarbleHitEdge(){
-    if(marble.x > screenWidth - marble.radius * 2){
+    if(marble.x > screenWidth - marble.radius){
         if(dx > 0){
             gameActive = false;
             alert("LEFT WIN");
         }
     }
-    else if(marble.x < 0){
+    else if(marble.x < marble.radius){
         if(dx < 0){
             gameActive = false;
             alert("RIGHT WIN");
         }
     }
-    else if(marble.y < 0){
+    else if(marble.y < marble.radius){
         dy = -dy;
     }
-    else if(marble.y > screenHeight - marble.radius * 2){
+    else if(marble.y > screenHeight - marble.radius){
         dy = -dy;
     }
 }
@@ -163,8 +170,8 @@ function checkMarbleBoardHitTest(){
 }
 
 function checkIntersect(marble, board){
-    var marbleCenterX = marble.x + RADIUS;
-    var marbleCenterY = marble.y + RADIUS;
+    var marbleCenterX = marble.x;
+    var marbleCenterY = marble.y;
     var boardCenterX = board.x + BOARD_WIDTH / 2;
     var boardCenterY = board.y + BOARD_HEIGHT / 2;
 
@@ -178,10 +185,10 @@ function checkIntersect(marble, board){
 function onKeyDown(evt) {
     var key = evt.keyCode;
     switch (key) {
-        case 65:
+        case 83:
             leftBoardUp = true;
             break;
-        case 90:
+        case 88:
             leftBoardDown = true;
             break;
         case 75:
@@ -196,26 +203,31 @@ function onKeyDown(evt) {
 function onKeyUp(evt) {
     var key = evt.keyCode;
     switch (key) {
-        case 65:
-            leftBoardUp = false;
-            break;
-        case 90:
-            leftBoardDown = false;
-            break;
-        case 75:
-            rightBoardUp = false;
-            break;
-        case 77:
-            rightBoardDown = false;
-            break;
-//        case 76:
-//            if(!gameActive && !sent && preloaded){
-//                gameActive = true;
-//                gameLoopHandler = setInterval(gameLoop, loopInterval);
-//                break;
-//            }
-//        case 88:
-//            window.document.Flash.restartKey(key);
+        case 83://s
+            leftBoardUp = false;break;
+        case 88://x
+            leftBoardDown = false;break;
+        case 65://A
+            start();break;
 
+        case 75://k
+            rightBoardUp = false;break;
+        case 77://m
+            rightBoardDown = false;break;
+        case 76://L
+            start();break;
+
+        default:
+            break;
+    }
+}
+
+function start(){
+    if(!gameActive){
+        clearInterval(gameLoopHandler);
+    }
+    else{
+        clearInterval(gameLoopHandler);
+        gameLoopHandler = setInterval(gameLoop, LOOPINTERVAL);
     }
 }

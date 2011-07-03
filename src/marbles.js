@@ -23,6 +23,7 @@ function initEventHandlers() {
     $(document).keydown(onKeyDown);
     $(document).keyup(onKeyUp);
     $('#btnRestart').click(function(e){
+        ctx.clearRect(0, 0, screenWidth, screenHeight);
         initPosition();
         start();
     });

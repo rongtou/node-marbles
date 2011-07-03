@@ -25,7 +25,6 @@ function initEventHandlers() {
     $('#btnRestart').click(function(e){
         ctx.clearRect(0, 0, screenWidth, screenHeight);
         initPosition();
-        start();
     });
 }
 
@@ -224,11 +223,7 @@ function onKeyUp(evt) {
 }
 
 function start(){
-    if(!gameActive){
-        clearInterval(gameLoopHandler);
-    }
-    else{
-        clearInterval(gameLoopHandler);
-        gameLoopHandler = setInterval(gameLoop, LOOPINTERVAL);
-    }
+    gameActive = true;
+    clearInterval(gameLoopHandler);
+    gameLoopHandler = setInterval(gameLoop, LOOPINTERVAL);
 }
